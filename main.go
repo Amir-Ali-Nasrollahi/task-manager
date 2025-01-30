@@ -40,10 +40,23 @@ func main() {
 			fmt.Println(res)
 			task.Add(ID, res[1])
 		case "list":
-			task.ShowAll()
+			if len(res) == 1 {
+				fmt.Println(task.ShowAll())
+			} else {
+				fmt.Println(task.ShowBy(res[1]))
+			}
 		case "update":
 			id, _ := strconv.Atoi(res[1])
 			task.Update(id, res[2])
+		case "delete":
+			id, _ := strconv.Atoi(res[1])
+			task.Delete(id)
+		case "mark-done":
+			id, _ := strconv.Atoi(res[1])
+			task.MarkStatus(id, "done")
+		case "mark-in-progress":
+			id, _ := strconv.Atoi(res[1])
+			task.MarkStatus(id, "in-progress")
 		}
 	}
 }

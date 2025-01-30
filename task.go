@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"errors"
+)
 
 type Todo struct {
 	ID     int    `json:"id"`
@@ -19,20 +21,20 @@ type Task struct {
 	NextID int
 }
 
-func (t Task) CheckTodoExist(id int) (int, int) {
-	flag := 0
+func (t Task) checkTodoExist(id int) (int, error) {
+	var err error = errors.New("the id out of the range")
 	var todo_key int
 	for key, value := range t.todo {
 
 		if value.ID <= id && value.ID == id {
 			todo_key = key
-			flag = 1
+			err = nil
 			break
 		}
 
 	}
 
-	return todo_key, flag
+	return todo_key, err
 }
 
 func (t *Task) Add(ID int, Name string) {
@@ -44,30 +46,41 @@ func (t *Task) Add(ID int, Name string) {
 
 }
 
-func (t Task) ShowAll() {
-
-	fmt.Println(t.todo)
-
+func (t Task) ShowAll() []Todo {
+	return t.todo
 }
 
 func (t *Task) Update(id int, newName string) {
 
-	flag := 0
-	var todo_key int
-	for key, value := range t.todo {
-
-		if value.ID <= id && value.ID == id {
-			todo_key = key
-			flag = 1
-			break
-		}
-
-	}
-	if flag == 1 {
-		t.todo[todo_key] = Todo{id, newName, "todo"}
+	todo_key, err := t.checkTodoExist(id)
+	if err == nil {
+		t.todo[todo_key].Name = newName
 	}
 }
 
 func (t *Task) Delete(id int) {
 
+	delete_key, err := t.checkTodoExist(id)
+	if err == nil {
+		t.todo = append(t.todo[0:delete_key], t.todo[delete_key+1:]...)
+	}
+
+}
+func (t Task) ShowBy(showingBy string) []Todo {
+
+	var list_of_todos []Todo
+	for _, value := range t.todo {
+
+		if value.Status == showingBy {
+			list_of_todos = append(list_of_todos, value)
+		}
+	}
+	return list_of_todos
+
+}
+func (t *Task) MarkStatus(id int, status string) {
+	returnId, err := t.checkTodoExist(id)
+	if err == nil {
+		t.todo[returnId].Status = status
+	}
 }
