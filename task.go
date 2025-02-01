@@ -1,7 +1,9 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
+	"os"
 )
 
 type Todo struct {
@@ -43,7 +45,8 @@ func (t *Task) Add(ID int, Name string) {
 	t.todo = append(t.todo, Todo{ID, Name, "todo"})
 
 	t.NextID = nextID
-
+	res, _ := json.Marshal(t.todo)
+	os.WriteFile("./task.json", res, 0644)
 }
 
 func (t Task) ShowAll() []Todo {
@@ -55,7 +58,9 @@ func (t *Task) Update(id int, newName string) {
 	todo_key, err := t.checkTodoExist(id)
 	if err == nil {
 		t.todo[todo_key].Name = newName
-	}
+	
+	res, _ := json.Marshal(t.todo)
+	os.WriteFile("./task.json", res, 0644)}
 }
 
 func (t *Task) Delete(id int) {
@@ -64,6 +69,9 @@ func (t *Task) Delete(id int) {
 	if err == nil {
 		t.todo = append(t.todo[0:delete_key], t.todo[delete_key+1:]...)
 	}
+
+	res, _ := json.Marshal(t.todo)
+	os.WriteFile("./task.json", res, 0644)
 
 }
 func (t Task) ShowBy(showingBy string) []Todo {
@@ -83,4 +91,6 @@ func (t *Task) MarkStatus(id int, status string) {
 	if err == nil {
 		t.todo[returnId].Status = status
 	}
+	res, _ := json.Marshal(t.todo)
+	os.WriteFile("./task.json", res, 0644)
 }
