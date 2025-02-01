@@ -23,6 +23,11 @@ type Task struct {
 	NextID int
 }
 
+func (t Task) writeOnFile() {
+	res, _ := json.Marshal(t.todo)
+	os.WriteFile("./task.json", res, 0644)
+}
+
 func (t Task) checkTodoExist(id int) (int, error) {
 	var err error = errors.New("the id out of the range")
 	var todo_key int
@@ -45,8 +50,7 @@ func (t *Task) Add(ID int, Name string) {
 	t.todo = append(t.todo, Todo{ID, Name, "todo"})
 
 	t.NextID = nextID
-	res, _ := json.Marshal(t.todo)
-	os.WriteFile("./task.json", res, 0644)
+	t.writeOnFile()
 }
 
 func (t Task) ShowAll() []Todo {
@@ -58,9 +62,8 @@ func (t *Task) Update(id int, newName string) {
 	todo_key, err := t.checkTodoExist(id)
 	if err == nil {
 		t.todo[todo_key].Name = newName
-	
-	res, _ := json.Marshal(t.todo)
-	os.WriteFile("./task.json", res, 0644)}
+	}
+	t.writeOnFile()
 }
 
 func (t *Task) Delete(id int) {
@@ -70,8 +73,7 @@ func (t *Task) Delete(id int) {
 		t.todo = append(t.todo[0:delete_key], t.todo[delete_key+1:]...)
 	}
 
-	res, _ := json.Marshal(t.todo)
-	os.WriteFile("./task.json", res, 0644)
+	t.writeOnFile()
 
 }
 func (t Task) ShowBy(showingBy string) []Todo {
@@ -91,6 +93,5 @@ func (t *Task) MarkStatus(id int, status string) {
 	if err == nil {
 		t.todo[returnId].Status = status
 	}
-	res, _ := json.Marshal(t.todo)
-	os.WriteFile("./task.json", res, 0644)
+	t.writeOnFile()
 }
