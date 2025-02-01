@@ -24,6 +24,8 @@ func main() {
 	task := Task{}
 	var ID int = 0
 
+
+	fmt.Print("\n\nthe command is : `add`,`update`,`mark-`,`delete`\n")
 	for {
 		/*
 		*
@@ -31,14 +33,15 @@ func main() {
 		*
 		**/
 
-		fmt.Println("enter your entry : ")
+		fmt.Print("\nenter your entry : ")
+
 		res := readPrompt()
 
 		switch res[0] {
 		case "add":
 			ID++
-			fmt.Println(res)
 			task.Add(ID, res[1])
+			fmt.Printf("the Task added with ID : %v\n", ID)
 		case "list":
 			if len(res) == 1 {
 				fmt.Println(task.ShowAll())
@@ -48,9 +51,11 @@ func main() {
 		case "update":
 			id, _ := strconv.Atoi(res[1])
 			task.Update(id, res[2])
+			fmt.Printf("the Task updated with ID : %v\n", id)
 		case "delete":
 			id, _ := strconv.Atoi(res[1])
 			task.Delete(id)
+			fmt.Printf("the Task deleted with ID : %v\n", id)
 		case "mark-done":
 			id, _ := strconv.Atoi(res[1])
 			task.MarkStatus(id, "done")
