@@ -1,3 +1,3 @@
-#the readme file of project
+the readme file of project
 
 https://roadmap.sh/projects/task-tracker
